@@ -1,1 +1,1 @@
-command file
+create a file created_file.txt
