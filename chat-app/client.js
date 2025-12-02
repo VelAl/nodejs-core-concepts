@@ -1,6 +1,8 @@
 const net = require('net');
 const readline = require('readline/promises');
 
+const { ID_PRFX } = require('./helpers');
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -20,6 +22,18 @@ const moveTerminalCursor = (dx, dy) =>
     });
   });
 
+let clientID = null;
+const catchIdAssignedByServer = (message) => {
+  if (!clientID && message.toString('utf-8').startsWith(ID_PRFX)) {
+    const [_, ID] = message.toString('utf-8').split(ID_PRFX);
+    clientID = ID;
+
+    console.log('ID assigned ===>', ID);
+
+    return true;
+  }
+};
+
 const clientSocket = net.createConnection(
   {
     host: 'localhost',
@@ -35,12 +49,14 @@ const clientSocket = net.createConnection(
       await moveTerminalCursor(0, -1);
       await clearTerminalLine(0);
 
-      clientSocket.write(message);
+      clientSocket.write(`Client: ${clientID}===> ${message}`);
     };
 
     askQuestionInTerminal();
 
     clientSocket.on('data', async (data) => {
+      if (catchIdAssignedByServer(data)) return;
+
       console.log();
 
       await moveTerminalCursor(0, -1);
