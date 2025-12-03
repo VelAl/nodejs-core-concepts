@@ -49,20 +49,21 @@ const clientSocket = net.createConnection(
       await moveTerminalCursor(0, -1);
       await clearTerminalLine(0);
 
-      clientSocket.write(`Client: ${clientID}===> ${message}`);
+      clientSocket.write(`Client: ${clientID} ===> ${message}`);
     };
 
-    askQuestionInTerminal();
-
     clientSocket.on('data', async (data) => {
-      if (catchIdAssignedByServer(data)) return;
+      if (catchIdAssignedByServer(data)) {
+        askQuestionInTerminal();
+        return;
+      }
 
       console.log();
 
       await moveTerminalCursor(0, -1);
       await clearTerminalLine(0);
 
-      console.log('data ===>', data.toString('utf-8'));
+      console.log(data.toString('utf-8'));
 
       askQuestionInTerminal();
     });
