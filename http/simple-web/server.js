@@ -1,17 +1,17 @@
 import http from 'node:http';
 
-import { routes } from './routes.js';
-import { sendHtml } from './utils.js';
+import { notFound, routes } from './routes.js';
+import { sendFile } from './utils.js';
 
 const server = http.createServer();
 
 server.on('request', (request, response) => {
-  const page = routes[request.url];
+  const route = routes[request.url];
 
-  if (page && request.method === 'GET') {
-    sendHtml(response, 200, page);
+  if (route && request.method === 'GET') {
+    sendFile(response, 200, route);
   } else {
-    sendHtml(response, 404, '404.html');
+    sendFile(response, 404, notFound);
   }
 });
 
