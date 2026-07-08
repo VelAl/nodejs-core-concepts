@@ -1,0 +1,9 @@
+.uploaded-image {
+  max-width: min(100%, 36rem);
+  height: auto;
+  border-radius: 0.25rem;
+}
+
+.image-placeholder {
+  color: #64748b;
+}

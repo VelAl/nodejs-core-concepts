@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Image</title>
+    <link rel="stylesheet" href="/shared/base.css" />
+    <link rel="stylesheet" href="/upload/upload.css" />
+  </head>
+  <body>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/upload" aria-current="page">Upload</a>
+      <a href="/image">Image</a>
+    </nav>
+    <main class="page upload-page">
+      <section class="upload-section">
+        <h1 class="upload-heading">Upload Image</h1>
+        <form id="upload-form" class="upload-form">
+          <div class="drop-zone" id="drop-zone">
+            <p class="drop-zone-text" id="drop-zone-text">
+              Drag and drop an image or GIF here or click
+            </p>
+            <p class="drop-zone-file" id="file-name" hidden></p>
+            <button type="button" class="browse-btn" id="browse-btn">
+              Upload
+            </button>
+            <input
+              type="file"
+              id="file-input"
+              name="file"
+              accept="image/*"
+              required
+              hidden
+            />
+          </div>
+          <button type="submit" class="send-btn" id="send-btn" disabled>
+            Send
+          </button>
+        </form>
+        <p id="status" class="upload-status" aria-live="polite"></p>
+      </section>
+    </main>
+    <script src="/upload/script.js"></script>
+  </body>
+</html>

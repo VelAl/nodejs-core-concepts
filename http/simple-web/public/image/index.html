@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image</title>
+    <link rel="stylesheet" href="/shared/base.css" />
+    <link rel="stylesheet" href="/image/image.css" />
+  </head>
+  <body>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/upload">Upload</a>
+      <a href="/image" aria-current="page">Image</a>
+    </nav>
+    <main class="page">
+      <h1>Image</h1>
+      <section>
+        <img
+          id="uploaded-image"
+          class="uploaded-image"
+          src="/image/file"
+          alt="Uploaded image"
+          hidden
+        />
+        <p id="image-placeholder" class="image-placeholder">
+          No file uploaded yet.
+        </p>
+      </section>
+    </main>
+    <script src="/image/script.js"></script>
+  </body>
+</html>

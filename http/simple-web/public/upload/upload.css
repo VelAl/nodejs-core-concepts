@@ -1,0 +1,122 @@
+.upload-page {
+  align-items: stretch;
+  justify-content: center;
+  text-align: left;
+}
+
+.upload-section {
+  width: min(100%, 36rem);
+  margin: 0 auto;
+}
+
+.upload-heading {
+  margin: 0 0 1rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #404040;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  width: 100%;
+  min-height: 16rem;
+  padding: 2.5rem 2rem;
+  border: 2px dashed #b0b0b0;
+  border-radius: 0.25rem;
+  background: #d9d9d9;
+  text-align: center;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.drop-zone.is-dragover {
+  border-color: #808080;
+  background: #cfcfcf;
+}
+
+.drop-zone-text {
+  margin: 0;
+  max-width: 100%;
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.drop-zone-file {
+  width: 100%;
+  margin: 0;
+  color: #333;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.drop-zone-file:not([hidden]) + .browse-btn {
+  margin-top: -0.25rem;
+}
+
+.drop-zone:has(.drop-zone-file:not([hidden])) .drop-zone-text {
+  display: none;
+}
+
+#file-input {
+  display: none;
+}
+
+.browse-btn,
+.send-btn {
+  padding: 0.45rem 1.25rem;
+  border: 1px solid #999;
+  border-radius: 0.25rem;
+  background: #f0f0f0;
+  color: #333;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.browse-btn:hover,
+.send-btn:hover:not(:disabled) {
+  background: #e4e4e4;
+  border-color: #777;
+}
+
+.send-btn {
+  align-self: flex-start;
+}
+
+.send-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.upload-status {
+  min-height: 1.5rem;
+  margin: 1rem 0 0;
+  font-size: 0.925rem;
+  color: #64748b;
+}
+
+.upload-status.is-success {
+  color: #15803d;
+}
+
+.upload-status.is-error {
+  color: #b91c1c;
+}
