@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import { MiniExpress } from '../mini-express/index.js';
 import { GET, PORT, staticRoutes } from './constants/index.js';
+import { apiRoutes } from './routes/index.js';
 
 const server = new MiniExpress();
 
@@ -11,6 +12,11 @@ staticRoutes.forEach(({ path, fileName, type }) => {
 
     res.sendFile(filePath, type);
   });
+});
+
+// ====== JSON ROUTES ======
+apiRoutes.forEach(({ method, path, handler }) => {
+  server.route(method, path, handler);
 });
 
 server.listen(PORT, () => {});
