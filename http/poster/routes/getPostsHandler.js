@@ -1,6 +1,6 @@
 import { postsData, usersData } from '../constants/index.js';
 
-export function postsHandler(req, res) {
+export function getPostsHandler(req, res) {
   const posts = postsData.map((post) => {
     const user = usersData.find((user) => user.id === post.userId);
 

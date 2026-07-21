@@ -1,7 +1,7 @@
 import { sessionsData, usersData } from '../constants/index.js';
 import { parseCookies } from '../utils/parseCookies.js';
 
-export function userHandler(req, res) {
+export function getUserHandler(req, res) {
   const { token } = parseCookies(req.headers.cookie);
 
   if (!token) {
