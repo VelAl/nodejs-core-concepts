@@ -10,3 +10,4 @@ export const DELETE = 'DELETE';
 export { staticRoutes } from './staticRoutes.js';
 export { postsData } from './posts.js';
 export { usersData } from './users.js';
+export { sessionsData } from './sessions.js';

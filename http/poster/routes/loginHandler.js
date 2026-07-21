@@ -1,4 +1,4 @@
-import { usersData } from '../constants/index.js';
+import { sessionsData, usersData } from '../constants/index.js';
 
 export function loginHandler(req, res) {
   let body = '';
@@ -24,6 +24,20 @@ export function loginHandler(req, res) {
         .sendJson({ error: 'Invalid username or password' });
     }
 
+    const token = crypto.randomUUID();
+
+    const session = {
+      id: sessionsData.length + 1,
+      token,
+      userId: user.id,
+    };
+
+    sessionsData.push(session);
+
+    res.setHeader(
+      'Set-Cookie',
+      `token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict`
+    );
     res.sendJson({ message: 'Login successful' });
   });
 }
