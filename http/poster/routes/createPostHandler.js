@@ -1,25 +1,11 @@
-import { postsData, sessionsData, usersData } from '../constants/index.js';
-import { parseCookies } from '../utils/parseCookies.js';
+import { postsData, UNAUTHORIZED } from '../constants/index.js';
 
 export function createPostHandler(req, res) {
-  const { token } = parseCookies(req.headers.cookie);
-
-  if (!token) {
-    return res.status(401).sendJson({ error: 'Unauthorized' });
+  if (!req.user) {
+    return res.status(401).sendJson(UNAUTHORIZED);
   }
 
-  const session = sessionsData.find((session) => session.token === token);
-
-  if (!session) {
-    return res.status(401).sendJson({ error: 'Unauthorized' });
-  }
-
-  const user = usersData.find((user) => user.id === session.userId);
-
-  if (!user) {
-    return res.status(404).sendJson({ error: 'User not found' });
-  }
-
+  const user = req.user;
   let body = '';
 
   req.on('data', (chunk) => {
@@ -30,9 +16,7 @@ export function createPostHandler(req, res) {
     const { title, body: postBody } = JSON.parse(body || '{}');
 
     if (!title?.trim() || !postBody?.trim()) {
-      return res
-        .status(400)
-        .sendJson({ error: 'Title and body are required' });
+      return res.status(400).sendJson({ error: 'Title and body are required' });
     }
 
     const post = {

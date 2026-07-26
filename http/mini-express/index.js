@@ -6,8 +6,11 @@ class MiniExpress {
     this.server = http.createServer();
 
     this.routes = {};
+    this.middlewares = [];
 
-    this.server.on('request', (request, response) => {
+    this.server.on('request', async (request, response) => {
+      await this.#runMiddlewares(request, response);
+
       const key = this.#formKey(request.method, request.url);
       const route = this.routes[key];
 
@@ -51,6 +54,10 @@ class MiniExpress {
     this.routes[key] = callback;
   }
 
+  addMiddleware(callback) {
+    this.middlewares.push(callback);
+  }
+
   listen(port, callback) {
     this.server.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`);
@@ -68,6 +75,13 @@ class MiniExpress {
 
     return Object.keys(this.routes).some((key) => key.split(':')[1] === path);
   }
+
+  // A for-of loop is used for simplicity. Express uses a recursive next() callback chain.
+  #runMiddlewares = async (request, response) => {
+    for (const middleware of this.middlewares) {
+      await middleware(request, response);
+    }
+  };
 }
 
 export { MiniExpress };

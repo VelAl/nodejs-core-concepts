@@ -1,9 +1,12 @@
 import { join } from 'node:path';
 import { MiniExpress } from '../mini-express/index.js';
 import { GET, PORT, staticRoutes } from './constants/index.js';
+import { attachUser } from './middlewares/attachUser.js';
 import { apiRoutes } from './routes/index.js';
 
 const server = new MiniExpress();
+
+server.addMiddleware(attachUser);
 
 // ====== FILE ROUTES ======
 staticRoutes.forEach(({ path, fileName, type }) => {

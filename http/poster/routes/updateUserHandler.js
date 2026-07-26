@@ -1,25 +1,11 @@
-import { sessionsData, usersData } from '../constants/index.js';
-import { parseCookies } from '../utils/parseCookies.js';
+import { UNAUTHORIZED, usersData } from '../constants/index.js';
 
 export function updateUserHandler(req, res) {
-  const { token } = parseCookies(req.headers.cookie);
-
-  if (!token) {
-    return res.status(401).sendJson({ error: 'Unauthorized' });
+  if (!req.user) {
+    return res.status(401).sendJson(UNAUTHORIZED);
   }
 
-  const session = sessionsData.find((session) => session.token === token);
-
-  if (!session) {
-    return res.status(401).sendJson({ error: 'Unauthorized' });
-  }
-
-  const user = usersData.find((user) => user.id === session.userId);
-
-  if (!user) {
-    return res.status(404).sendJson({ error: 'User not found' });
-  }
-
+  const user = req.user;
   let body = '';
 
   req.on('data', (chunk) => {
@@ -37,8 +23,7 @@ export function updateUserHandler(req, res) {
 
     const usernameTaken = usersData.some(
       (existingUser) =>
-        existingUser.username === username.trim() &&
-        existingUser.id !== user.id
+        existingUser.username === username.trim() && existingUser.id !== user.id
     );
 
     if (usernameTaken) {
