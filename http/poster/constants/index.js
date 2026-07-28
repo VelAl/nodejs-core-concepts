@@ -8,7 +8,7 @@ export const PATCH = 'PATCH';
 export const DELETE = 'DELETE';
 
 export { INVALID_JSON, UNAUTHORIZED } from './errors.js';
-export { staticRoutes } from './staticRoutes.js';
+export { spaPages, staticRoutes } from './staticRoutes.js';
 export { postsData } from './posts.js';
 export { usersData } from './users.js';
 export { sessionsData } from './sessions.js';
