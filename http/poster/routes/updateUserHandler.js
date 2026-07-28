@@ -6,39 +6,31 @@ export function updateUserHandler(req, res) {
   }
 
   const user = req.user;
-  let body = '';
+  const { name, username, password } = req.body;
 
-  req.on('data', (chunk) => {
-    body += chunk.toString('utf-8');
-  });
+  if (!name?.trim() || !username?.trim()) {
+    return res
+      .status(400)
+      .sendJson({ error: 'Name and username are required' });
+  }
 
-  req.on('end', () => {
-    const { name, username, password } = JSON.parse(body || '{}');
+  const usernameTaken = usersData.some(
+    (existingUser) =>
+      existingUser.username === username.trim() && existingUser.id !== user.id
+  );
 
-    if (!name?.trim() || !username?.trim()) {
-      return res
-        .status(400)
-        .sendJson({ error: 'Name and username are required' });
-    }
+  if (usernameTaken) {
+    return res.status(409).sendJson({ error: 'Username already taken' });
+  }
 
-    const usernameTaken = usersData.some(
-      (existingUser) =>
-        existingUser.username === username.trim() && existingUser.id !== user.id
-    );
+  user.name = name.trim();
+  user.username = username.trim();
 
-    if (usernameTaken) {
-      return res.status(409).sendJson({ error: 'Username already taken' });
-    }
+  if (password?.trim()) {
+    user.password = password;
+  }
 
-    user.name = name.trim();
-    user.username = username.trim();
+  const { password: _password, ...safeUser } = user;
 
-    if (password?.trim()) {
-      user.password = password;
-    }
-
-    const { password: _password, ...safeUser } = user;
-
-    res.sendJson(safeUser);
-  });
+  res.sendJson(safeUser);
 }

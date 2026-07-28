@@ -5,32 +5,23 @@ export function createPostHandler(req, res) {
     return res.status(401).sendJson(UNAUTHORIZED);
   }
 
-  const user = req.user;
-  let body = '';
+  const { title, body } = req.body;
 
-  req.on('data', (chunk) => {
-    body += chunk.toString('utf-8');
-  });
+  if (!title?.trim() || !body?.trim()) {
+    return res.status(400).sendJson({ error: 'Title and body are required' });
+  }
 
-  req.on('end', () => {
-    const { title, body: postBody } = JSON.parse(body || '{}');
+  const post = {
+    id: postsData.length + 1,
+    title: title.trim(),
+    body: body.trim(),
+    userId: req.user.id,
+  };
 
-    if (!title?.trim() || !postBody?.trim()) {
-      return res.status(400).sendJson({ error: 'Title and body are required' });
-    }
+  postsData.push(post);
 
-    const post = {
-      id: postsData.length + 1,
-      title: title.trim(),
-      body: postBody.trim(),
-      userId: user.id,
-    };
-
-    postsData.push(post);
-
-    res.sendJson({
-      ...post,
-      author: user.name,
-    });
+  res.sendJson({
+    ...post,
+    author: req.user.name,
   });
 }

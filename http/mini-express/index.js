@@ -9,31 +9,36 @@ class MiniExpress {
     this.middlewares = [];
 
     this.server.on('request', async (request, response) => {
+      response.sendFile = async (path, mime) => {
+        const fileHandle = await fs.open(path, 'r');
+        const fileStream = fileHandle.createReadStream();
+
+        response.setHeader('Content-Type', mime);
+
+        fileStream.pipe(response);
+      };
+
+      response.sendJson = (json) => {
+        response.setHeader('Content-Type', 'application/json');
+        response.end(JSON.stringify(json));
+      };
+
+      response.status = (code) => {
+        response.statusCode = code;
+        return response;
+      };
+
       await this.#runMiddlewares(request, response);
+
+      // Skip the route if a middleware already sent the response.
+      if (response.writableEnded) {
+        return;
+      }
 
       const key = this.#formKey(request.method, request.url);
       const route = this.routes[key];
 
       if (route) {
-        response.sendFile = async (path, mime) => {
-          const fileHandle = await fs.open(path, 'r');
-          const fileStream = fileHandle.createReadStream();
-
-          response.setHeader('Content-Type', mime);
-
-          fileStream.pipe(response);
-        };
-
-        response.sendJson = (json) => {
-          response.setHeader('Content-Type', 'application/json');
-          response.end(JSON.stringify(json));
-        };
-
-        response.status = (code) => {
-          response.statusCode = code;
-          return response;
-        };
-
         route(request, response);
       } else {
         const isRoute = this.#routesHavePath(request.url);

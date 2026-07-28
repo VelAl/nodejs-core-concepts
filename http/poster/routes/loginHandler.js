@@ -1,43 +1,33 @@
 import { sessionsData, usersData } from '../constants/index.js';
 
 export function loginHandler(req, res) {
-  let body = '';
+  const { username, password } = req.body;
 
-  req.on('data', (chunk) => {
-    body += chunk.toString('utf-8');
-  });
+  if (!username?.trim() || !password?.trim()) {
+    return res
+      .status(400)
+      .sendJson({ error: 'Username and password are required' });
+  }
 
-  req.on('end', () => {
-    const { username, password } = JSON.parse(body || '{}');
+  const user = usersData.find((user) => user.username === username);
 
-    if (!username?.trim() || !password?.trim()) {
-      return res
-        .status(400)
-        .sendJson({ error: 'Username and password are required' });
-    }
+  if (!user || user.password !== password) {
+    return res.status(401).sendJson({ error: 'Invalid username or password' });
+  }
 
-    const user = usersData.find((user) => user.username === username);
+  const token = crypto.randomUUID();
 
-    if (!user || user.password !== password) {
-      return res
-        .status(401)
-        .sendJson({ error: 'Invalid username or password' });
-    }
+  const session = {
+    id: sessionsData.length + 1,
+    token,
+    userId: user.id,
+  };
 
-    const token = crypto.randomUUID();
+  sessionsData.push(session);
 
-    const session = {
-      id: sessionsData.length + 1,
-      token,
-      userId: user.id,
-    };
-
-    sessionsData.push(session);
-
-    res.setHeader(
-      'Set-Cookie',
-      `token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict`
-    );
-    res.sendJson({ message: 'Login successful' });
-  });
+  res.setHeader(
+    'Set-Cookie',
+    `token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict`
+  );
+  res.sendJson({ message: 'Login successful' });
 }
